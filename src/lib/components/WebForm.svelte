@@ -32,16 +32,7 @@ import type {WebContent} from '$lib/types/WebContent'
 			.then((result) => {
 				console.log('recibiendo formulario:');
 				//console.table(result);
-				if (result.error) {
-					//console.error(result.error);
-					message = {
-						title: 'Error',
-						text: 'Error in Request ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-				} else {
+			
 					console.log('Formulario:');
 					console.log(result);
 					//alert(cont_id+':'+result.length)
@@ -50,7 +41,7 @@ import type {WebContent} from '$lib/types/WebContent'
                  //listFormReset = [...result];
                   
 					}
-				}
+				
 			})
    .catch((error)=>console.log(error.message))
 		//});

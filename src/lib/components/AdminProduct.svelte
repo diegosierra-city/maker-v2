@@ -37,19 +37,8 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_user.error)
 				console.table(result);
-				if (result[0].error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-
-					//console.error(result[0].error);
-				} else {
+				
 					//++++show_message("Save", "Save data", "message-green");
 					//console.log("Muy Bien:"+result[0].ok);
 					prod = result[0];
@@ -63,7 +52,7 @@
 					m_show = true;
 					saveOption()
 					//console.table(product);
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 
@@ -193,13 +182,12 @@
 			.then((result) => {
 				console.log('options load:');
 				console.table(result);
-				if (result[0].error) {
-					console.error(result[0].error);
-				} else {
+				
 					//console.log("Listado Category Muy Bien:");
 					listOptions = result;
-				}
-			});
+				
+			})
+			.catch((error) => console.log(error.message));
 	};
 
 	//$: loadOptions(prod.id);
@@ -279,24 +267,11 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_user.error)
-
-				//console.log(result);
-				if (result.error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-
-					//console.error(result[0].error);
-				} else {
+				
 					listOptions = result;
 					//console.log('recibiendo Form:')
 					//console.table(result)
-				}
+				
 			});
 
 		//.catch((error) => {console.log(error)})

@@ -64,14 +64,13 @@
 			.then((response) => response.json())
 			.then((result) => {
 				//console.table(result);
-				if (result.error) {
-					console.log(result.error);
-				} else {
+				
 					//console.log(result);
 					infoCompany = result;
 					//cont = JSON.parse(result[1]);
-				}
-			});
+				
+			})
+			.catch((error) => console.log(error.message));
 	};
 
 	
@@ -98,18 +97,7 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_$userNow.error)
-				//console.log(result);
-				if (result.error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-					//console.error(result[0].error);
-				} else {
+				
 					//console.log("Muy Bien:"+result[0].ok);
 					infoCompany = result[0];
 					console.log('se guardo')
@@ -121,10 +109,9 @@
 						accion: ''
 					};
 					m_show = true;
-				}
-			});
-
-		//.catch(error => console.log(error))
+				
+			})
+			.catch((error) => console.log(error.message));
 
 		//  });
 	};
@@ -148,15 +135,7 @@
 		})
 			.then((response) => response.json())
 			.then((result) => {
-				if (result[0].error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result[0].error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-				} else {
+				
 					infoCompany = result[0];
 
 					message = {
@@ -166,12 +145,9 @@
 						accion: ''
 					};
 					m_show = true;
-				}
+				
 			})
-			.catch((error) => {
-				// Upload failed
-				console.error('Error:', error);
-			});
+			.catch((error) => console.log(error.message))
 	}
 
 	import Editor from '@tinymce/tinymce-svelte';

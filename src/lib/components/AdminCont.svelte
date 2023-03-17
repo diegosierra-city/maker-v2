@@ -79,14 +79,7 @@
 			.then((result) => {
 				console.log('Nuevo Contenido:');
 				console.table(result);
-				/*
-                if (result[0].error) {
-                    console.error(result[0].error);
-                } else {
-                    //console.log("Listado Category Muy Bien:");
-                    content = result[0];
-                }
-				*/
+				
 				content = result[0];
 
 				if (page_type == 'Gallery') {
@@ -126,14 +119,7 @@
 			.then((result) => {
 				console.log('Nuevas Galleries:');
 				console.log(result);
-				/*
-                if (result[0].error) {
-                    console.error(result[0].error);
-                } else {
-                    //console.log("Listado Category Muy Bien:");
-                    content = result[0];
-                }
-				*/
+				
 				listGalleries = result;
 			})
 			.catch((error) => console.log(error.message));
@@ -187,19 +173,7 @@
 				.then((response) => response.json())
 				//.then(result => console.log(result))
 				.then((result) => {
-					//console.log('ok:'+new_user.error)
-					//console.log(result);
-					if (result.error) {
-						message = {
-							title: 'Error',
-							text: 'Error: ' + result.error,
-							class: 'message-red',
-							accion: ''
-						};
-						m_show = true;
-
-						//console.error(result[0].error);
-					} else {
+					
 						//++++show_message("Save", "Save data", "message-green");
 						//console.log("Muy Bien:"+result[0].ok);
 						content = result[0];
@@ -213,7 +187,7 @@
 						m_show = true;
 
 						show_cont = false;
-					}
+					
 				})
 				.catch((error) => console.log(error.message));
 
@@ -246,15 +220,6 @@
 				console.log('upload:');
 				console.table(result[0]);
 
-				if (result[0].error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result[0].error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-				} else {
 					content = result[0];
 					message = {
 						title: 'Upload',
@@ -263,7 +228,7 @@
 						accion: ''
 					};
 					m_show = true;
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 	}
@@ -292,15 +257,7 @@
 				console.log('upload Gallery:');
 				console.log(result);
 
-				if (result[0].error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result[0].error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-				} else {
+				
 					listGalleries[position] = result[0];
 					message = {
 						title: 'Upload',
@@ -309,7 +266,7 @@
 						accion: ''
 					};
 					m_show = true;
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 	}
@@ -352,24 +309,11 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_user.error)
-
-				//console.log(result);
-				if (result.error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-
-					//console.error(result[0].error);
-				} else {
+				
 					listGalleries = result;
 					//console.log('recibiendo Form:')
 					//console.table(result)
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 
@@ -508,24 +452,11 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_user.error)
-
-				//console.log(result);
-				if (result.error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-
-					//console.error(result[0].error);
-				} else {
+				
 					listForm = result;
 					//console.log('recibiendo Form:')
 					//console.table(result)
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 
@@ -576,16 +507,7 @@
 			.then((result) => {
 				console.log('recibiendo formulario:');
 				console.table(result);
-				if (result.error) {
-					//console.error(result.error);
-					message = {
-						title: 'Error',
-						text: 'Error in Request ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-				} else {
+			
 					console.log(
 						'Cargando Formulario:' +
 							'?ref=form-list&user_id=' +
@@ -602,7 +524,7 @@
 					if (result.length > 0) {
 						listForm = result;
 					}
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 		//});

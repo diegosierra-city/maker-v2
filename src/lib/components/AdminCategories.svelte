@@ -44,12 +44,10 @@
 			.then((response) => response.json())
 			.then((result) => {
 				//console.table(result);
-				if (result[0].error) {
-					console.error(result[0].error);
-				} else {
+				
 					//console.log("Listado Category Muy Bien:");
 					category_list = result;
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 	});
@@ -74,19 +72,7 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_user.error)
-
-				if (result[0].error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result[0].error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-
-					console.error(result[0].error);
-				} else {
+				
 					message = {
 						title: 'Save',
 						text: 'Save data',
@@ -99,7 +85,7 @@
 					category_list = result;
 					//new_user = result[0]
 					//cookie_update('user',JSON.stringify(new_user))
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 
@@ -182,15 +168,6 @@
 					//console.log("RRRY:");
 					//console.table(result);
 
-					if (result[0].error) {
-						message = {
-							title: 'Error',
-							text: 'Error: ' + result[0].error,
-							class: 'message-red',
-							accion: ''
-						};
-						m_show = true;
-					} else {
 						category_list[image_position] = result[0];
 						message = {
 							title: 'Upload',
@@ -199,7 +176,7 @@
 							accion: ''
 						};
 						m_show = true;
-					}
+					
 				})
 				.catch((error) => console.log(error.message));
 		}

@@ -40,16 +40,13 @@
 			.then((response) => response.json())
 			.then((result) => {
 				//console.table(result);
-				if (result[0].error) {
-					console.error(result[0].error);
-					listForm = [];
-				} else {
+				
 					console.log('listado:' + result[0] + '*');
 					console.log(result);
 					if (result.length > 0) {
 						listForm = result;
 					}
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 	};
@@ -76,19 +73,7 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_user.error)
-
-				if (result[0].error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result[0].error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-
-					console.error(result[0].error);
-				} else {
+				
 					message = {
 						title: 'Save',
 						text: 'Save data',
@@ -101,7 +86,7 @@
 					listForm = result;
 					//new_user = result[0]
 					//cookie_update('user',JSON.stringify(new_user))
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 

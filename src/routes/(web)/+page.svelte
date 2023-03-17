@@ -73,15 +73,12 @@
 			.then((response) => response.json())
 			.then((result) => {
 				//console.table(result);
-				if (result.error) {
-					console.log('error');
-					console.log(result.error);
-				} else {
+				
 					console.log('ok');
 					console.log(result);
 
 					listCont = result;
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 	});
@@ -93,15 +90,13 @@
 			.then((response) => response.json())
 			.then((result) => {
 				//console.table(result);
-				if (result.error) {
-					console.error(result.error);
-				} else {
+				
 					console.log('contenido:');
 					console.log(result);
 					pag = result[0];
 					cont = result[1];
 					//console.table(pag.metadescription);
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 	});

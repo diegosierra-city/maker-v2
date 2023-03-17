@@ -47,19 +47,10 @@
 			.then((response) => response.json())
 			.then((result) => {
 				//console.table(result);
-				if (result.error) {
-					//console.error(result.error);
-					message = {
-						title: 'Error',
-						text: 'Error in Request ' + result.error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-				} else {
+				
 					//console.log("Listado Menu Muy Bien:");
 					menu_list = result;
-				}
+				
 			})
 			.catch((error) => console.log(error.message));
 	});
@@ -84,19 +75,7 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				//console.log('ok:'+new_user.error)
-
-				if (result[0].error) {
-					message = {
-						title: 'Error',
-						text: 'Error: ' + result[0].error,
-						class: 'message-red',
-						accion: ''
-					};
-					m_show = true;
-
-					//console.error(result[0].error);
-				} else {
+				
 					message = {
 						title: 'Save',
 						text: 'Save succesfully',
@@ -107,7 +86,7 @@
 
 					//console.log("Muy Bien:"+result[0].ok);
 					menu_list = result;
-				}
+				
 			})
 
 			.catch((error) => console.log(error.message));
