@@ -1,5 +1,6 @@
 export interface ProductOptions {
  id: number,
+ company_id: number,
  product_id: number,
  name: string,
  image: string,

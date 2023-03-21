@@ -106,16 +106,29 @@ if ($ref == 'loadID') {
       $rowCi = $rCi->fetch_array(MYSQLI_ASSOC);
       $company_id = $rowCi['company_id'];
 
+      $field2 = ",company_id";
+      $id2 = ",'$company_id'";
+      $add = "AND company_id='$company_id' ";
+
       if ($folder == 'maker_companies') {
         $field = 'id';
         $id = $company_id;
+        $field2 = '';
+        $id2 = '';
+        $add = '';
       }
+      if ($folder == 'maker_content_blocks') {
+        $field = 'menu_id';
+      }
+
 
       //echo "SELECT * FROM $folder WHERE $field='$id' LIMIT 1 <br>";
       $response = array();
-      $result = $mysqli->query("SELECT * FROM $folder WHERE $field='$id' LIMIT 1") or die($mysqli->error);
+      $result = $mysqli->query("SELECT * FROM $folder WHERE $field='$id' $add LIMIT 1") or die($mysqli->error);
+
+
       if (mysqli_num_rows($result) == 0) {
-        $mysqli->query("INSERT INTO $folder ($field) VALUES ('$id')") or die($mysqli->error);
+        $mysqli->query("INSERT INTO $folder ($field $field2) VALUES ('$id' $id2)") or die($mysqli->error);
         $result = $mysqli->query("SELECT * FROM $folder WHERE $field='$id' LIMIT 1") or die($mysqli->error);
       }
       $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -663,7 +676,7 @@ if ($ref == 'form-list') {
         }
 
         if ($f == 0) {
-          $form = '[{}]';
+          //$form = '[{}]';
         }
 
         ///
@@ -814,10 +827,15 @@ if ($ref == 'form-list-report') {
             header("HTTP/1.1 403 ERROR");
             echo 'Error in token';
           } else {
+            ///company_id
+      $rCi = $mysqli->query("SELECT company_id FROM maker_users WHERE id='$user_id' LIMIT 1 ") or die($mysqli->error);
+      $rowCi = $rCi->fetch_array(MYSQLI_ASSOC);
+      $company_id = $rowCi['company_id'];
+
             $category_id = $_GET['category_id'];
             $products = array();
 
-            $result = $mysqli->query("SELECT * FROM maker_products WHERE category_id='$category_id' ORDER BY active DESC, position ASC , product ASC");
+            $result = $mysqli->query("SELECT * FROM maker_products WHERE category_id='$category_id' AND company_id='$company_id' ORDER BY active DESC, position ASC , product ASC");
             $c = 0;
             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
               $c++;
@@ -993,9 +1011,12 @@ if ($ref == 'form-list-report') {
             } else {
               $type = $_GET['type'];
               $filter = "";
+              $company_id=$_GET['company_id'];
 
-              $filter = "AND maker_menu.type='$type'";
-
+              if($type!=''){
+              $filter = "AND maker_menu.type='$type'";  
+              }
+              
               $page = array();
               $content = array();
               //echo "SELECT * FROM maker_menu WHERE company_id='$company_id' $filter ORDER BY position ASC <br>";
@@ -1015,9 +1036,11 @@ if ($ref == 'form-list-report') {
                   $menu_id = $row['id'];
                 }
               }
+
+              //echo $company_id.'*'.$page;
               /// content
 
-              $resultC = $mysqli->query("SELECT maker_content_blocks.* FROM maker_content_blocks  WHERE menu_id='$menu_id' ORDER BY maker_content_blocks.position ASC LIMIT 1");
+              $resultC = $mysqli->query("SELECT maker_content_blocks.* FROM maker_content_blocks  WHERE menu_id='$menu_id' AND company_id='$company_id' ORDER BY maker_content_blocks.position ASC LIMIT 1");
               $rowC = $resultC->fetch_array(MYSQLI_ASSOC);
               $content = $rowC;
               $page[] = $content;
@@ -1639,7 +1662,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_id = $data['user_id'];
     $time_life = $data['time_life'];
     $token = $data['token'];
-    
+
     $tokenBase = md5($user_id . $time_life . $keyEncrypter);
 
     if ($tokenBase != $token) {
@@ -1647,11 +1670,32 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       //echo '[{"error":"yess-'.$user_id.'+'.$time_life.'"}]'; 
       echo '[{"error":"error in token"}]';
     } else {
+      ///company_id
+      $rCi = $mysqli->query("SELECT company_id FROM maker_users WHERE id='$user_id' LIMIT 1 ") or die($mysqli->error);
+      $rowCi = $rCi->fetch_array(MYSQLI_ASSOC);
+      $company_id = $rowCi['company_id'];
+
       /// se procesa
       $cod = time();
-$product = $data['product'];
+      $product = $data['product'];
+      //
+      $insertA = "";
+      $insertB = "";
+      $UPDATE = "";
 //
-    $product_id = $product['id'];
+foreach ($request as $campo => $valor) {
+  // $update="$campo='$valor',";
+  //$valor=addslashes($valor);
+  if ($campo != 'id') {
+    $insertA .= $campo . ',';
+    $insertB .= "'$valor',";
+    $UPDATE .= "`$campo`='$valor',";
+  } else {
+    $id = $valor;
+  }
+}
+
+      $product_id = $product['id'];
       $c_id = $product['id'];
       $c_category_id = $product['category_id'];
       $c_product = $product['product'];
@@ -1688,7 +1732,7 @@ $product = $data['product'];
       /// borramos los que no están
       //$mysqli->query("DELETE FROM maker_menu WHERE cod!='$cod'") or die($mysqli->error); 
       //
-/*
+      /*
       $result = $mysqli->query("SELECT * FROM maker_products WHERE cod='$now' LIMIT 1");
       $new_prod = array();
       while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -1699,7 +1743,7 @@ $new_prod[] = $row;
       header("HTTP/1.1 200 OK");
       //echo $fecha.'*'.$empresa_id;
       //echo json_encode($new_prod);
-echo '[{"save":"product ok"}]';
+      echo '[{"save":"product ok"}]';
     }
   }
   /// 
@@ -1894,20 +1938,22 @@ echo '[{"save":"product ok"}]';
         $rB = trim($insertB, ',');
 
         $action = "INSERT INTO $folder ($rA) VALUES ($rB)";
-        $mysqli->query($action) or die($mysqli->error);
+        
+        $mysqli->query($action);
         ///
-        $resultID = $mysqli->query("SELECT id FROM $folder ORDER BY id DESC LIMIT 1") or die($mysqli->error);
+        $resultID = $mysqli->query("SELECT id FROM $folder ORDER BY id DESC LIMIT 1");
         $rowID = $resultID->fetch_array();
         $id = $rowID['id'];
+
       } else {
         ///actualizar
         $u = trim($UPDATE, ',');
         $action = "UPDATE $folder SET $u WHERE id='$id'";
         $mysqli->query($action) or die($mysqli->error);
+        //header("HTTP/1.1 402 ERROR");
+        //echo json_decode($action);
       }
-      //header("HTTP/1.1 200 OK");
-      //echo '+'.$action.'*';
-
+      
       /// borramos los que no están
       //$mysqli->query("DELETE FROM maker_menu WHERE cod!='$cod'") or die($mysqli->error); 
       //
@@ -1917,13 +1963,13 @@ echo '[{"save":"product ok"}]';
       while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
         $response[] = $row;
       }
-
       ///
       header("HTTP/1.1 200 OK");
       //echo $fecha.'*'.$empresa_id;
       echo json_encode($response);
       //echo trim($update,',');
       //echo '[{"ok":"yess"}]';
+      //echo '[{"ok":"'.$action.'"}]';
     }
 
 
@@ -2005,9 +2051,9 @@ echo '[{"save":"product ok"}]';
       }
 
       //borramos los que no están
-      $add = "$columna='$columna_id' AND";
-      if ($_GET['campo'] == '') {
-        $add = "";
+      $add = "company_id='$company_id' AND ";
+      if ($_GET['campo'] != '') {
+      $add .= "$columna='$columna_id' AND";
       }
 
       $mysqli->query("DELETE FROM $folder WHERE $add cod!='$cod'") or die($mysqli->error);
@@ -2117,7 +2163,7 @@ echo '[{"save":"product ok"}]';
     //$result->close();
     //$mysqli->close();
 
-  }else if ($ref == 'save-options') {
+  } else if ($ref == 'save-options') {
 
     $user_id = $data['user_id'];
     $time_life = $data['time_life'];
@@ -2146,7 +2192,7 @@ echo '[{"save":"product ok"}]';
         $m_active = $option['active'];
 
 
-        if ($m_id > 1000000 || $m_id==0) {
+        if ($m_id > 1000000 || $m_id == 0) {
           ///Nuevo Registro
           $mysqli->query("INSERT INTO maker_product_versions (product_id, `name`,	`image`,	price,	stock,	position,	active, cod) VALUES ('$m_product_id','$m_name','$m_image', '$m_price',	'$m_stock','$m_position','$m_active','$cod')") or die($mysqli->error);
         } else {
@@ -2176,9 +2222,9 @@ echo '[{"save":"product ok"}]';
 
       ///
       header("HTTP/1.1 200 OK");
-      
-        echo '[{"update":"versions ok"}]';
-      
+
+      echo '[{"update":"versions ok"}]';
+
       //echo '[{"ok":"yess"}]';
     }
   } else if ($ref == 'upload') { /// for pages

@@ -35,7 +35,7 @@ import type {WebContent} from '$lib/types/WebContent'
 			
 					console.log('Formulario:');
 					console.log(result);
-					//alert(cont_id+':'+result.length)
+					//console.log('ttt:'+result.length)
 					if (result.length > 0) {
 						listForm = result;
                  //listFormReset = [...result];

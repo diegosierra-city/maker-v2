@@ -145,11 +145,12 @@
 			};
 			m_show = true;
 		} else {
+			
 			let image = e.target.files[0];
 			//console.table(fileinput);
 			//alert(image_id+'*'+image_position+'*'+category_list[image_position].position);
 			//console.table(image);
-			category_list[image_position].image = 'load';
+			
 			const dataArray = new FormData();
 			dataArray.append('user_id', String($userNow.id));
 			dataArray.append('time_life', String($userNow.user_time_life));
@@ -184,12 +185,12 @@
 </script>
 
 <svelte:head>
-	<title>Admin Products</title>
+	<title>Maker: Categories</title>
 </svelte:head>
 
 {#if show_products == false}
 	<div class="p-3 w-full mt-14 ">
-		<h3>Products</h3>
+		<h3>Categories</h3>
 		<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 			<div class="flex">
 				<button class="btn-green mr-2 flex" on:click={saveCategory}>
@@ -251,7 +252,7 @@
 													ct.image = '';
 												}}
 											>
-											<i class="fa fa-trash-o" />
+											<i class="fa fa-trash-o m-1" />
 											</button
 											>
 										</div>
@@ -260,13 +261,25 @@
 										<button
 											class="btn-min bg-primary"
 											on:click={() => {
+												if(ct.id>1000000){
+													message = {
+				title: 'Error',
+				text: 'First save this Category',
+				class: 'message-red',
+				accion: ''
+			};
+			m_show = true;	
+												}else{
 												image_id = ct.id;
 												image_position = i;
 												fileinput.click();
+												ct.image = 'load';	
+												}
+												
 											}}
 										>
-										<i class="fa fa-picture-o mr-2 mt-1" />
-										 file
+										<i class="fa fa-camera m-1" />
+										
 										</button>
 									</div>
 								</div>

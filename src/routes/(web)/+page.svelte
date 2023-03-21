@@ -11,8 +11,10 @@
 	import type { WebContent } from '$lib/types/WebContent';
 	import type { MenuWeb } from '$lib/types/MenuWeb';
 	import WebCarrousel from '$lib/components/WebCarrousel.svelte';
+	import WebAccess from '$lib/components/WebAccess.svelte';
 
-	
+
+		
 
 	let cont: BlockContent = {
 		id: 0,
@@ -84,6 +86,9 @@
 	});
 
 	onMount(async () => {
+		console.log(
+			urlAPI + '?ref=page-web&type=Home&company_id=' + company_id + '&tokenWeb=' + tokenWeb
+		)
 		await fetch(
 			urlAPI + '?ref=page-web&type=Home&company_id=' + company_id + '&tokenWeb=' + tokenWeb
 		)
@@ -100,6 +105,8 @@
 			})
 			.catch((error) => console.log(error.message));
 	});
+
+
 	let innerWidth: number = 0;
 	let innerHeight: number = 0;
 	let scrollY: number = 0;
@@ -141,7 +148,7 @@
 
 <WebCarrousel {cont} {urlFiles} {prefixFolder} />
 
-
+<WebAccess {listCont} {urlFiles}/>
 <section class="relative" id="principal">
 
 <div class="bg-silver h-10"></div>
@@ -185,13 +192,18 @@
 	<div class="w-11/12 md:w-8/12 mx-auto">
 		<h2 class="text-primary">{cont.title}</h2>
 		<h3>{cont.subtitle}</h3>
-
-		<p class="m-3 p-3 bg-aliceblue">{cont.text1}</p>
+{#if cont.text1}
+<p class="m-3 p-3 bg-aliceblue">{@html cont.text1}</p>
+{/if}
+		
 	</div>
 
-<div class="w-11/12 md:w-8/12 mx-auto">
-			<p class="m-3 p-3 bg-aliceblue">{cont.text2}</p>
-	</div>
+	{#if cont.text2}
+	<div class="w-11/12 md:w-8/12 mx-auto">
+		<p class="m-3 p-3 bg-aliceblue">{@html cont.text2}</p>
+</div>
+	{/if}
+
 	
 
 

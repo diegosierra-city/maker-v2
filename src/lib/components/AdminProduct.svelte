@@ -3,13 +3,13 @@
 	import { apiKey, userNow } from '../../store';
 	import type { Product } from '$lib/types/Product';
 	import { Circle3 } from 'svelte-loading-spinners';
-	import Messages from '$lib/components/Messages.svelte';
+	//import Messages from '$lib/components/Messages.svelte';
 	import type { ProductOptions } from '$lib/types/ProductOptions';
 
 	import type { Message } from '$lib/types/Message';
 
-	let m_show: boolean = false;
-	let message: Message;
+	export let m_show: boolean = false;
+	export let message: Message;
 
 	export let show_product: boolean;
 
@@ -20,13 +20,16 @@
 
 	const saveProd = async () => {
 		//console.log("yy:" + prod.id);
-		await fetch(urlAPI + '?ref=save-prod', {
+		//await fetch(urlAPI + '?ref=save-prod', {
+		await fetch(urlAPI + '?ref=save', {	
 			method: 'POST', //POST - PUT - DELETE
 			body: JSON.stringify({
 				user_id: $userNow.id,
 				time_life: $userNow.user_time_life,
 				token: $userNow.token,
-				product: prod
+				request: prod,
+				folder: 'maker_products'
+				//product: prod,
 				//prod_position: prod_position
 				//
 			}),
@@ -37,12 +40,13 @@
 			.then((response) => response.json())
 			//.then(result => console.log(result))
 			.then((result) => {
-				console.table(result);
+				console.log('cargado');
+				console.log(result);
 				
 					//++++show_message("Save", "Save data", "message-green");
 					//console.log("Muy Bien:"+result[0].ok);
 					prod = result[0];
-					console.log('cargado');
+					
 					message = {
 						title: 'Save Product',
 						text: 'Save Product ' + prod.product,
@@ -50,7 +54,7 @@
 						accion: ''
 					};
 					m_show = true;
-					saveOption()
+					//saveOption()
 					//console.table(product);
 				
 			})
@@ -197,6 +201,7 @@
 
 	let newOption: ProductOptions = {
 		id: 0,
+		company_id: $apiKey.companyId,
 		product_id: prod.id,
 		name: '',
 		image: '',
@@ -217,6 +222,7 @@
 		listOptions = [...listOptions, newOption];
 		newOption = {
 			id: 0,
+			company_id: $apiKey.companyId,
 			product_id: prod.id,
 			name: '',
 			image: '',
@@ -251,13 +257,16 @@
 		//alert('FF')
 		console.log('enviando');
 		console.table(listOptions);
-		fetch(urlAPI + '?ref=save-options', {
+		//fetch(urlAPI + '?ref=save-options', {
+			fetch(urlAPI + '?ref=save-list&folder=maker_product_versions&campo=product_id&campo_id='+prod.id, {
 			method: 'POST', //POST - PUT - DELETE
 			body: JSON.stringify({
+				company_id: $apiKey.companyId,
 				user_id: $userNow.id,
 				time_life: $userNow.user_time_life,
 				token: $userNow.token,
-				listOptions: listOptions
+				list: listOptions
+				//listOptions: listOptions
 				//
 			}),
 			headers: {
@@ -298,20 +307,10 @@
 				on:click={() => {
 					show_product = false;
 					saveProd();
+					saveOption()
 				}}
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-5 w-5 mr-1"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-						clip-rule="evenodd"
-					/>
-				</svg>
+				<i class="fa fa-save mr-1 mt-1" />
 				Save</button
 			>
 			<button
@@ -320,18 +319,7 @@
 					show_product = false;
 				}}
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-5 w-5 mr-1"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-						clip-rule="evenodd"
-					/>
-				</svg>
+				<i class="fa fa-close mr-1 mt-1" />
 				Close</button
 			>
 		</div>
@@ -711,6 +699,7 @@ on:click={() => {
 				on:click={() => {
 					show_product = false;
 					saveProd();
+					saveOption()
 				}}
 			>
 				<i class="fa fa-save mr-2 mt-1" />
@@ -738,5 +727,7 @@ on:click={() => {
 	}}
 	bind:this={fileinput}
 />
+<!--
+	<Messages bind:m_show bind:message />
+-->
 
-<Messages bind:m_show bind:message />

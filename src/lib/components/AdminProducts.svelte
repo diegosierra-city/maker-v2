@@ -21,6 +21,7 @@
 	let new_product: Product;
 	let productN: Product = {
 		id: 0,
+		company_id: $apiKey.companyId,
 		category_id: category_id,
 		product: '',
 		ref: '',
@@ -45,6 +46,17 @@
 	const urlAPI = $apiKey.urlAPI_Maker;
 
 	const loadProducts= async (cat:number) => {
+		console.log(
+			urlAPI +
+				'?ref=product-list&user_id=' +
+				$userNow.id +
+				'&time=' +
+				$userNow.user_time_life +
+				'&token=' +
+				$userNow.token +
+				'&category_id=' +
+				cat
+		)
 		await fetch(
 			urlAPI +
 				'?ref=product-list&user_id=' +
@@ -75,13 +87,16 @@
 		//console.log("yy");
 		//// POST
 
-		await fetch(urlAPI + '?ref=save-product', {
+		//await fetch(urlAPI + '?ref=save-product', {
+		await fetch(urlAPI + '?ref=save-list&folder=maker_products&campo=category_id&campo_id='+category_id, {	
 			method: 'POST', //POST - PUT - DELETE
 			body: JSON.stringify({
+				company_id: $apiKey.companyId,
 				user_id: $userNow.id,
 				time_life: $userNow.user_time_life,
 				token: $userNow.token,
-				products: product_list
+				list: product_list
+				//products: product_list
 				//password: pass,
 			}),
 			headers: {
@@ -134,6 +149,7 @@
 		product_list = [...product_list, new_product];
 		new_product = {
 		id: 0,
+		company_id: $apiKey.companyId,
 		category_id: category_id,
 		product: '',
 		ref: '',
@@ -302,7 +318,7 @@
 </div>
 
 {#if show_product == true}
-	<AdminProduct bind:show_product bind:prod={product_list[prod_position]} />
+	<AdminProduct bind:show_product bind:prod={product_list[prod_position]} bind:m_show bind:message />
 {/if}
 
 <Messages bind:m_show bind:message />

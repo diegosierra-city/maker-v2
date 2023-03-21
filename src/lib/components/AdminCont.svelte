@@ -54,7 +54,7 @@
 
 		console.log(
 			urlAPI +
-				'?ref=loadID&folder=maker_content&id=' +
+				'?ref=loadID&folder=maker_content_blocks&id=' +
 				id +
 				'&user_id=' +
 				$userNow.id +
@@ -66,7 +66,7 @@
 		/**/
 		await fetch(
 			urlAPI +
-				'?ref=loadID&folder=maker_content_blocks&field=menu_id&id=' +
+				'?ref=loadID&folder=maker_content_blocks&id=' +
 				id +
 				'&user_id=' +
 				$userNow.id +
@@ -154,6 +154,7 @@
 
 	const saveCont = async (id: number) => {
 		//console.log("yy:" + content.id);
+		console.log(content)
 		if (id > 0) {
 			await fetch(urlAPI + '?ref=save', {
 				method: 'POST', //POST - PUT - DELETE
@@ -176,7 +177,9 @@
 					
 						//++++show_message("Save", "Save data", "message-green");
 						//console.log("Muy Bien:"+result[0].ok);
-						content = result[0];
+						console.log('save cont')
+						console.log(result)
+						//content = result[0];
 
 						message = {
 							title: 'Save',
@@ -189,7 +192,7 @@
 						show_cont = false;
 					
 				})
-				.catch((error) => console.log(error.message));
+				.catch((error) => console.error(error));
 
 			//  });
 		}
@@ -356,7 +359,7 @@
 		{
 			id: time,
 			menu_id: cont_id,
-			name: 'Name*' + cont_id,
+			name: 'Name',
 			type: 'text',
 			required: true,
 			response: '',
@@ -382,16 +385,16 @@
 		}
 	];
 
-	let newForm: Form;
-	$: newForm = {
+	let newForm: Form = {
 		id: 0,
-		menu_id: cont_id,
-		name: '',
-		type: 'text',
-		required: true,
-		response: '',
-		position: 0
-	};
+			menu_id: cont_id,
+			name: '',
+			type: 'text',
+			required: true,
+			response: '',
+			position: 0
+	}
+	
 
 	function add_form() {
 		//menu_list.push(new_menu) ///esta opción no actuaiza el listado automáticamente
@@ -414,9 +417,9 @@
 		//show_message("Add Menu", "For save this, click the 'save' button before exiting", "message-green");
 	}
 
-	const deleteForm = (id: number) => {
+	const deleteForm = (position: number) => {
 		if (confirm('Delete this Field?')) {
-			listForm = listForm.filter((item) => item.id != id);
+			listForm = listForm.filter((item) => item.position != position);
 			//mensaje("se borró la tarea", "text-bg-danger");
 			message = {
 				title: 'Delete Field',
@@ -467,31 +470,17 @@
 	//$: const load_form = (menu_id: number) =>{
 	///+++++onMount(async () => {
 	const loadForm = async (menu_id: number) => {
-		content = {
-			id: 0,
-			menu_id: cont_id,
-			title: '',
-			subtitle: '',
-			text1: '',
-			text2: '',
-			text3: '',
-			text4: '',
-			image1: '',
-			image2: '',
-			image3: '',
-			image4: '',
-			image_text1: '',
-			image_text2: '',
-			image_text3: '',
-			image_text4: '',
-			image_link1: '',
-			image_link2: '',
-			image_link3: '',
-			image_link4: '',
-			video: '',
-			position: 1,
-			link: ''
-		};
+		console.log(
+			urlAPI +
+							'?ref=form-list&user_id=' +
+							$userNow.id +
+							'&time=' +
+							$userNow.user_time_life +
+							'&token=' +
+							$userNow.token +
+							'&menu_id=' +
+							menu_id
+					);
 		await fetch(
 			urlAPI +
 				'?ref=form-list&user_id=' +
@@ -506,23 +495,12 @@
 			.then((response) => response.json())
 			.then((result) => {
 				console.log('recibiendo formulario:');
-				console.table(result);
-			
-					console.log(
-						'Cargando Formulario:' +
-							'?ref=form-list&user_id=' +
-							$userNow.id +
-							'&time=' +
-							$userNow.user_time_life +
-							'&token=' +
-							$userNow.token +
-							'&menu_id=' +
-							menu_id
-					);
+				//console.table(result);
+							
 					console.log(result);
 					//alert(cont_id+':'+result.length)
 					if (result.length > 0) {
-						listForm = result;
+					listForm = result;
 					}
 				
 			})
@@ -534,7 +512,10 @@
 	};
 
 	$: if (page_type == 'Form' && cont_id != 0) {
-		loadForm(cont_id);
+		onMount(()=>{
+			loadForm(cont_id);
+		})
+		
 	}
 
 	import Editor from '@tinymce/tinymce-svelte';
@@ -978,6 +959,8 @@
 										<th scope="col" class="px-2 py-1"> Position </th>
 										<th scope="col" class="px-4 py-1" />
 									</thead>
+								{#if listForm.length>0}
+									 
 									<tbody>
 										{#each listForm as form, i}
 											<tr class="bg-white border-b hover:bg-aliceblue">
@@ -1017,28 +1000,18 @@
 												<td>
 													<button
 														on:click={() => {
-															deleteForm(form.id);
+															deleteForm(form.position);
 														}}
 													>
-														<svg
-															xmlns="http://www.w3.org/2000/svg"
-															class="h-5 w-5 text-red cursor-pointer hover:black"
-															fill="none"
-															viewBox="0 0 24 24"
-															stroke="currentColor"
-															stroke-width="2"
-														>
-															<path
-																stroke-linecap="round"
-																stroke-linejoin="round"
-																d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-															/></svg
-														>
+														<i class="fa fa-trash-o text-lg text-red" />
 													</button>
 												</td>
 											</tr>
+											
 										{/each}
 									</tbody>
+									
+								{/if}
 								</table>
 							</div>
 							<!--the end fields-->

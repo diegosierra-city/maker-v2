@@ -206,7 +206,7 @@
 
 	<!--video-->
 
-	{#if cont.video != ''}
+	{#if cont.video}
 		<iframe
 			style="width:100%; height:60vw"
 			src="https://www.youtube.com/embed/{cont.video}"
@@ -215,6 +215,7 @@
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 			allowfullscreen
 		/>
+		+++{cont.video}--
 	{/if}
 
 	
