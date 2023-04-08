@@ -882,22 +882,23 @@ if ($ref == 'form-list-report') {
 
               $menu = array();
 
-              $result = $mysqli->query("SELECT id, menu, link, submenu, `type` FROM maker_menu WHERE menu_id='0' AND company_id='$company_id' $filter ORDER BY position ASC ") or die($mysqli->error);
+              $result = $mysqli->query("SELECT id, menu, link, submenu, `type` FROM maker_menu WHERE company_id='$company_id' AND menu_id='0' $filter ORDER BY position ASC ") or die($mysqli->error);
               $limit = mysqli_num_rows($result) + 1;
               $a = 0;
               while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 $a++;
 
-                if ($row['type'] == 'Products') { ///position products
+                if ($row['type'] == 'Products') { //cargamos las categorias
+                  //position products
                   //$categorias=array();
                   /// load catefgories
                   //$rprod = $mysqli->query("SELECT id, category AS menu FROM maker_categories WHERE company_id='$company_id' ORDER BY position ASC ");
                   // load products
-                  $rprod = $mysqli->query("SELECT maker_products.id, maker_products.product AS menu FROM maker_categories,maker_products WHERE maker_categories.company_id='$company_id' AND maker_products.category_id=maker_categories.id ORDER BY maker_categories.position ASC, maker_products.position ASC ");
+                  $rprod = $mysqli->query("SELECT maker_categories.id, maker_categories.category AS menu FROM maker_categories WHERE maker_categories.company_id='$company_id' ORDER BY maker_categories.position ASC ");
 
                   while ($rowP = $rprod->fetch_array(MYSQLI_ASSOC)) {
                     //$rowP['link']='/maker_products/'.clean_link(trim($rowP['menu']));///categories
-                    $rowP['link'] = '/product/' . clean_link(trim($rowP['menu'])); ///product
+                    $rowP['link'] = '/categorias/' . clean_link(trim($rowP['menu'])); ///product
                     $rowP['submenu'] = false;
                     $rowP['submenus'] = array();
 
@@ -2268,7 +2269,7 @@ $new_prod[] = $row;
         $table = 'maker_products';
         $w = 800;
         $h = 600;
-      } else if ($folder == 'maker_gallery' || $folder == 'maker_product_versions') {
+      } else if ($folder == 'maker_gallery' || $folder == 'maker_product_versions' || $folder == 'maker_companies') {
         $w = 800;
         $h = 600;
       }

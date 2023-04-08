@@ -1,7 +1,7 @@
 <script lang="ts">
 	//import WebConstruccion from "$lib/components/WebConstruccion.svelte";
 	import { onMount } from 'svelte/internal';
-	import WebMenu from '$lib/components/WebMenu.svelte';
+	import WebMenuB from '$lib/components/WebMenuB.svelte';
 	import WebFooter from '$lib/components/WebFooter.svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { apiKey } from '../../store';
@@ -144,9 +144,10 @@
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY />
 
-<WebMenu {scrollY} />
-
 <WebCarrousel {cont} {urlFiles} {prefixFolder} />
+<WebMenuB {scrollY} />
+
+
 
 <WebAccess {listCont} {urlFiles}/>
 <section class="relative" id="principal">
@@ -208,5 +209,7 @@
 
 
 </section>
+
+<WebCarrousel {cont} {urlFiles} {prefixFolder} />
 
 <WebFooter />

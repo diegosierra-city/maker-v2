@@ -24,6 +24,11 @@ box-sizing:border-box;
 -moz-font-smoothing: antialiased;
 -moz-osx-font-smoothing: antialiased;
  }
+
+ body{
+    @apply bg-secondary bg-opacity-40
+ }
+
  header{
     transition: 600ms all ease;
  }
@@ -58,27 +63,28 @@ table th{
  
 
  .menu_up{
-    @apply mx-auto
+    @apply mx-auto m-2
  }
  .menu_up ul{
     @apply flex items-center 
  }
  .menu-top .menu_up li{
 	transition: 600ms all;
-	@apply text-white px-3 py-2 text-sm font-medium border-b-4 border-primary hover:border-b-secondary hover:bg-lavender/10 
+	@apply text-white px-3 py-2 text-sm font-medium hover:bg-opacity-80 bg-secondary bg-opacity-100 mr-1 rounded-lg
 }
 
 .menu-top-star .menu_up li{
 	transition: 600ms all;
     border-color: rgba(0,0,0,0);
-	@apply text-white px-3 py-2 text-sm font-medium border-b-4  hover:border-b-secondary hover:bg-lavender/10 
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.53);
+	@apply text-white px-3 py-2 text-sm font-medium border-b-4  hover:border-b-secondary hover:bg-lavender/10
 }
 
 /*
 .boton-principal-active, .boton-principal-movil-active, 
 */
 .menu_up .active{
-	@apply  border-b-4 !border-b-secondary
+	@apply !bg-dimgray 
 }
 
 .menu_up_movil{
